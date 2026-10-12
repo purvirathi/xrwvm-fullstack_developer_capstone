@@ -26,10 +26,27 @@ SECRET_KEY =\
     'django-insecure-ccow$tz_=9%dxu4(0%^(z%nx32#s@(zt9$ih@)5l54yny)wm-0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', 'True').lower() == 'true'
 
-ALLOWED_HOSTS = []
-CSRF_TRUSTED_ORIGINS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.codeengine.appdomain.cloud',
+]
+extra_allowed_hosts = os.getenv('DJANGO_ALLOWED_HOSTS', '')
+if extra_allowed_hosts:
+    ALLOWED_HOSTS.extend(
+        host.strip() for host in extra_allowed_hosts.split(',') if host.strip()
+    )
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.codeengine.appdomain.cloud',
+]
+extra_csrf_origins = os.getenv('DJANGO_CSRF_TRUSTED_ORIGINS', '')
+if extra_csrf_origins:
+    CSRF_TRUSTED_ORIGINS.extend(
+        origin.strip() for origin in extra_csrf_origins.split(',') if origin.strip()
+    )
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [],
@@ -61,7 +78,10 @@ ROOT_URLCONF = 'djangoproj.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS':  [BASE_DIR / 'frontend' / 'static', BASE_DIR / 'frontend' / 'build'],
+        'DIRS': [
+            BASE_DIR / 'frontend' / 'static',
+            BASE_DIR / 'frontend' / 'build',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,4 +155,3 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATICFILES_DIRS = []
-

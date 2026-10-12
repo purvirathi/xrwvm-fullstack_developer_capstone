@@ -1,0 +1,12 @@
+.git
+.github
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/node_modules
+**/djangoenv
+**/venv
+server/frontend/build
+server/db.sqlite3
+3.png
+getallcarmakes_output.txt
